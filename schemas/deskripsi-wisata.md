@@ -1,1 +1,0 @@
-# Tabel deskripsi_wisata

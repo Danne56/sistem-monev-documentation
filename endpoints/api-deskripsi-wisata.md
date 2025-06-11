@@ -1,3 +1,4 @@
+
 # /deskripsi-wisata
 
 ## POST /api/deskripsi-wisata
@@ -165,5 +166,202 @@ Sama seperti POST, gunakan multipart/form-data untuk mengirim:
 {
   "status": "success",
   "message": "Deskripsi wisata dan semua gambarnya berhasil dihapus"
+}
+```
+
+## PATCH /api/deskripsi-wisata/:kd_desa
+
+**Deskripsi:** Menambahkan item baru ke kategori yang sudah ada (atraksi, penginapan, paket_wisata, suvenir) tanpa menghapus data yang sudah ada.
+
+**Authorization:** Memerlukan token dengan role `pengelola`
+
+### Request Format (Patch Add)
+
+Gunakan `multipart/form-data` untuk mengirimkan:
+
+- Field `data`: JSON string berisi data item baru yang akan ditambahkan
+- Field `atraksi[]`: File gambar untuk atraksi baru (maksimal 25 file)
+- Field `penginapan[]`: File gambar untuk penginapan baru (maksimal 25 file)
+- Field `paket_wisata[]`: File gambar untuk paket wisata baru (maksimal 25 file)
+- Field `suvenir[]`: File gambar untuk suvenir baru (maksimal 25 file)
+
+### Request Headers (Patch Add)
+
+```json
+{
+  "Authorization": "Bearer jwt_token_here",
+  "Content-Type": "multipart/form-data"
+}
+```
+
+### Request Body (Patch Add)
+
+```json
+{
+  "atraksi": [
+    {
+      "nama_atraksi": "Atraksi Tambahan",
+      "kategori_atraksi": "Budaya"
+    }
+  ],
+  "penginapan": [
+    {
+      "nama_penginapan": "Homestay Baru",
+      "harga_penginapan": 200000
+    }
+  ],
+  "paket_wisata": [
+    {
+      "nama_paket_wisata": "Paket Keluarga",
+      "harga_paket_wisata": 400000
+    }
+  ],
+  "suvenir": [
+    {
+      "nama_suvenir": "Tas Rajut",
+      "harga_suvenir": 75000
+    }
+  ]
+}
+```
+
+### Response (Patch Add - 200)
+
+```json
+{
+  "status": "success",
+  "message": "Data berhasil ditambahkan",
+  "data": {
+    "kd_desa": "DES001",
+    "atraksi": "[{\"id\":1,\"nama_atraksi\":\"Atraksi Lama\",\"gambar\":[]},{\"id\":2,\"nama_atraksi\":\"Atraksi Tambahan\",\"gambar\":[\"https://bucket.com/new_atraksi.jpg\"]}]",
+    "penginapan": "[{\"id\":1,\"nama_penginapan\":\"Hotel Lama\",\"gambar\":[]},{\"id\":2,\"nama_penginapan\":\"Homestay Baru\",\"gambar\":[\"https://bucket.com/new_penginapan.jpg\"]}]"
+  }
+}
+```
+
+## PATCH /api/deskripsi-wisata/:kd_desa/remove-item
+
+**Deskripsi:** Menghapus item spesifik dari kategori tertentu berdasarkan ID item.
+
+**Authorization:** Memerlukan token dengan role `pengelola`
+
+### Request Headers (Remove Item)
+
+```json
+{
+  "Authorization": "Bearer jwt_token_here",
+  "Content-Type": "application/json"
+}
+```
+
+### Request Body (Remove Item)
+
+```json
+{
+  "entity_type": "atraksi",
+  "item_id": 2
+}
+```
+
+**entity_type yang valid:**
+
+- `atraksi`
+- `penginapan`
+- `paket_wisata`
+- `suvenir`
+
+### Response (Remove Item - 200)
+
+```json
+{
+  "status": "success",
+  "message": "Item berhasil dihapus",
+  "data": {
+    "kd_desa": "DES001",
+    "atraksi": "[{\"id\":1,\"nama_atraksi\":\"Atraksi Lama\",\"gambar\":[]}]"
+  }
+}
+```
+
+### Error Responses (Remove Item)
+
+#### 400 - Bad Request
+
+```json
+{
+  "status": "fail",
+  "message": "entity_type dan item_id harus disediakan"
+}
+```
+
+```json
+{
+  "status": "fail",
+  "message": "entity_type tidak valid"
+}
+```
+
+#### 404 - Not Found
+
+```json
+{
+  "status": "fail",
+  "message": "Item tidak ditemukan"
+}
+```
+
+## POST /api/upload/gambar
+
+**Deskripsi:** Upload gambar tunggal ke Google Cloud Storage.
+
+### Request Headers (Upload)
+
+```json
+{
+  "Content-Type": "multipart/form-data"
+}
+```
+
+### Request Body (Upload)
+
+- Field `file`: File gambar (maksimal 5MB, format JPG/PNG/WebP)
+
+### Response (Upload - 200)
+
+```json
+{
+  "status": "success",
+  "url": "https://storage.googleapis.com/bucket-name/image-url.jpg"
+}
+```
+
+### Error Responses (Upload)
+
+#### 400 - Bad Request
+
+```json
+{
+  "status": "fail",
+  "message": "No file uploaded"
+}
+```
+
+## GET /api/atraksi-wisata
+
+**Deskripsi:** Mendapatkan data atraksi wisata secara acak untuk tampilan homepage.
+
+### Response (Random Attractions - 200)
+
+```json
+{
+  "status": "success",
+  "data": [
+    {
+      "nama_atraksi": "Air Terjun Sekumpul",
+      "gambar": ["https://bucket.com/atraksi1.jpg"],
+      "nama_desa": "Desa Sekumpul",
+      "slug": "desa-sekumpul"
+    }
+  ]
 }
 ```

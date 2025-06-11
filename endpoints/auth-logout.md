@@ -1,29 +1,64 @@
-# /logout
+# /authentication/logout
 
-Endpoint ini digunakan untuk logout dari website.
+Endpoint untuk logout pengguna dan menambahkan token ke blacklist.
 
 ## POST /authentication/logout
 
-### Header
+**Deskripsi:** Logout pengguna dan menambahkan token JWT ke blacklist untuk mencegah penggunaan ulang.
+
+### Headers
 
 ```json
 {
-    "Authorization": "Bearer urAccessToken"
+  "Authorization": "Bearer jwt_token_here"
 }
 ```
 
-### Body
+### Request Body
 
-```json
-{
-    "username": "urUsername"
-}
-```
+Tidak diperlukan body request.
 
-### Response
+### Response Sukses (200)
 
 ```json
 {
   "status": "success",
-  "message": "Logout Berhasil"
+  "message": "Logout berhasil"
 }
+```
+
+### Response Error
+
+#### 401 - Unauthorized
+
+```json
+{
+  "status": "fail",
+  "message": "Akses ditolak. Token tidak ditemukan."
+}
+```
+
+```json
+{
+  "status": "fail",
+  "message": "Token tidak valid atau sudah kadaluarsa"
+}
+```
+
+#### 403 - Forbidden
+
+```json
+{
+  "status": "fail",
+  "message": "Token sudah diblacklist"
+}
+```
+
+#### 500 - Internal Server Error
+
+```json
+{
+  "status": "error",
+  "message": "Internal server error"
+}
+```

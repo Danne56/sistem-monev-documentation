@@ -6,11 +6,11 @@ hero:
   text: "Backend Untuk Sistem Monev Desa Wisata"
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
+      text: Browse Endpoints
+      link: /endpoints/auth-register
     - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: View Schemas
+      link: /schemas/users
     - theme: alt
       text: Github
       link: https://github.com/Danne56/sistem-monev-api

@@ -1,12 +1,12 @@
 # /permintaan
 
-Endpoint ini digunakan oleh role `dinas` untuk mengelola permintaan pengajuan desa.
+Endpoint untuk mengelola permintaan pengajuan desa wisata.
 
 ## GET /api/permintaan
 
-Mendapatkan semua status desa.
+**Deskripsi:** Mendapatkan semua permintaan dengan informasi pengguna dan desa wisata.
 
-### Response Sukses
+### Response Sukses (200)
 
 ```json
 {
@@ -38,9 +38,15 @@ Mendapatkan semua status desa.
 
 ## GET /api/permintaan/:kd_permintaan
 
-Mendapatkan status desa berdasarkan kd_permintaan.
+**Deskripsi:** Mendapatkan detail permintaan berdasarkan kode permintaan.
 
-### Response
+### URL Parameters
+
+| Parameter     | Tipe   | Required | Deskripsi            |
+| ------------- | ------ | -------- | -------------------- |
+| kd_permintaan | string | Yes      | Kode unik permintaan |
+
+### Response Sukses (200)
 
 ```json
 {
@@ -58,23 +64,138 @@ Mendapatkan status desa berdasarkan kd_permintaan.
 }
 ```
 
-## PUT /api/permintaan/:kd_permintaan
+## POST /api/permintaan
 
-Memperbarui status desa berdasarkan kd_permintaan.
+**Deskripsi:** Membuat permintaan baru untuk pengajuan desa wisata.
 
-### Body
+**Authorization:** Memerlukan token dengan role `pengelola`
+
+### Headers
 
 ```json
 {
-  "status_permintaan": "diterima",
+  "Authorization": "Bearer jwt_token_here",
+  "Content-Type": "application/json"
 }
 ```
 
-### Response
+### Request Body
+
+```json
+{
+  "kd_desa": "DESA-abc123def4",
+  "status_permintaan": "diproses"
+}
+```
+
+**Status yang valid:**
+
+- `diproses` - Sedang diproses oleh dinas
+- `diterima` - Permintaan disetujui
+- `ditolak` - Permintaan ditolak
+- `selesai` - Proses selesai
+
+### Response Sukses (201)
+
+```json
+{
+  "status": "success",
+  "message": "Permintaan berhasil ditambahkan",
+  "data": {
+    "kd_permintaan": "REQ-xyz789abc1"
+  }
+}
+```
+
+## PUT /api/permintaan/:kd_permintaan
+
+**Deskripsi:** Memperbarui status permintaan. Saat ini tidak memerlukan autentikasi untuk testing purposes.
+
+### URL Parameters
+
+| Parameter     | Tipe   | Required | Deskripsi            |
+| ------------- | ------ | -------- | -------------------- |
+| kd_permintaan | string | Yes      | Kode unik permintaan |
+
+### Request Body
+
+```json
+{
+  "status_permintaan": "diterima"
+}
+```
+
+### Response Sukses (200)
 
 ```json
 {
   "status": "success",
   "message": "Status permintaan berhasil diperbarui"
+}
+```
+
+## DELETE /api/permintaan/:kd_permintaan
+
+**Deskripsi:** Menghapus permintaan. Saat ini tidak memerlukan autentikasi untuk testing purposes.
+
+### URL Parameters
+
+| Parameter     | Tipe   | Required | Deskripsi            |
+| ------------- | ------ | -------- | -------------------- |
+| kd_permintaan | string | Yes      | Kode unik permintaan |
+
+### Response Sukses (200)
+
+```json
+{
+  "status": "success",
+  "message": "Permintaan berhasil dihapus"
+}
+```
+
+### Error Responses
+
+#### 400 - Bad Request
+
+```json
+{
+  "status": "fail",
+  "message": "Data tidak valid"
+}
+```
+
+#### 401 - Unauthorized (untuk POST)
+
+```json
+{
+  "status": "fail",
+  "message": "Akses ditolak. Token tidak ditemukan."
+}
+```
+
+#### 403 - Forbidden (untuk POST)
+
+```json
+{
+  "status": "fail",
+  "message": "Hanya role 'pengelola' yang dapat membuat permintaan"
+}
+```
+
+#### 404 - Not Found
+
+```json
+{
+  "status": "fail",
+  "message": "Permintaan tidak ditemukan"
+}
+```
+
+#### 500 - Internal Server Error
+
+```json
+{
+  "status": "error",
+  "message": "Internal server error"
 }
 ```
