@@ -6,8 +6,8 @@ hero:
   text: "Backend Untuk Sistem Monev Desa Wisata"
   actions:
     - theme: brand
-      text: Browse Endpoints
-      link: /endpoints/auth-register
+      text: Get Started
+      link: /getting-started
     - theme: alt
       text: View Schemas
       link: /schemas/users
