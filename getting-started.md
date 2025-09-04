@@ -71,10 +71,55 @@ FRONTEND_URL=http://localhost:5173
 
 ### 5. Google Cloud Storage Setup
 
-1. Create a Google Cloud Project
-2. Enable Cloud Storage API
-3. Create a service account and download the JSON key file
-4. Place the key file as `service-account.json` in the API root directory
+To enable file uploads and storage, you need to configure Google Cloud Storage. This involves creating a service account and providing its credentials to the application.
+
+1. **Go to Google Cloud Console**:
+   Navigate to the [Google Cloud Console](https://console.cloud.google.com/).
+
+2. **Select or Create a Project**:
+
+   - If you have an existing project, select it from the project dropdown at the top of the page.
+   - If not, click **Create Project**, give it a name, and follow the setup instructions.
+
+3. **Enable the Cloud Storage API**:
+
+   - In the navigation menu (`☰`), go to **APIs & Services > Library**.
+   - Search for "Cloud Storage" and select it.
+   - Click **Enable** to activate the API for your project.
+
+4. **Create a Service Account**:
+
+   - In the navigation menu, go to **IAM & Admin > Service Accounts**.
+   - Click **+ CREATE SERVICE ACCOUNT**.
+   - **Service account details**:
+     - **Name**: Give your service account a descriptive name (e.g., `sistem-monev-storage`).
+     - **Service account ID**: An ID will be automatically generated.
+     - **Description**: Add a brief description of its purpose.
+   - Click **CREATE AND CONTINUE**.
+
+5. **Grant Permissions**:
+
+   - In the **Grant this service account access to project** step, you need to add a role.
+   - Click **Select a role** and search for **Storage Admin**.
+   - Select the `Storage Admin` role. This grants the service account full control over objects in Google Cloud Storage.
+   - Click **CONTINUE**.
+
+6. **Create a JSON Key**:
+
+   - In the final step, **Grant users access to this service account**, you can skip adding users.
+   - Click **DONE**. You will be returned to the service accounts list.
+   - Find the service account you just created and click on the three dots (`⋮`) under **Actions**, then select **Manage keys**.
+   - Click **ADD KEY > Create new key**.
+   - Choose **JSON** as the key type and click **CREATE**.
+   - A JSON file will be automatically downloaded to your computer. This is your service account key.
+
+7. **Place the Key File**:
+   - Rename the downloaded JSON file to `service-account.json`.
+   - Move this file to the root directory of the **API** (`/api`).
+
+:::danger SECURITY WARNING
+The `service-account.json` file contains sensitive credentials. **DO NOT** commit this file to version control (e.g., Git). Ensure that `service-account.json` is listed in your `.gitignore` file to prevent accidental exposure.
+:::
 
 ## Running the Application
 

@@ -2,15 +2,15 @@
 
 ## Kolom
 
-| Nama Kolom   | Tipe Data                | Constraint    | Deskripsi                      |
-| ------------ | ------------------------ | ------------- | ------------------------------ |
-| kd_desa      | VARCHAR(10)              | PRIMARY KEY   | Kode desa wisata (foreign key) |
-| atraksi      | JSONB                    | NULL          | Array objek atraksi wisata     |
-| penginapan   | JSONB                    | NULL          | Array objek penginapan         |
-| paket_wisata | JSONB                    | NULL          | Array objek paket wisata       |
-| suvenir      | JSONB                    | NULL          | Array objek suvenir            |
-| created_at   | TIMESTAMP WITH TIME ZONE | DEFAULT NOW() | Waktu pembuatan                |
-| updated_at   | TIMESTAMP WITH TIME ZONE | DEFAULT NOW() | Waktu terakhir diperbarui      |
+| Nama Kolom   | Tipe Data                | Constraint                                          | Deskripsi                      |
+| ------------ | ------------------------ | --------------------------------------------------- | ------------------------------ |
+| kd_desa      | TEXT                     | PRIMARY KEY, REFERENCES public.desa_wisata(kd_desa) | Kode desa wisata (foreign key) |
+| atraksi      | JSONB                    |                                                     | Array objek atraksi wisata     |
+| penginapan   | JSONB                    |                                                     | Array objek penginapan         |
+| paket_wisata | JSONB                    |                                                     | Array objek paket wisata       |
+| suvenir      | JSONB                    |                                                     | Array objek suvenir            |
+| created_at   | TIMESTAMP WITH TIME ZONE | DEFAULT CURRENT_TIMESTAMP                           | Waktu pembuatan                |
+| updated_at   | TIMESTAMP WITH TIME ZONE | DEFAULT CURRENT_TIMESTAMP                           | Waktu terakhir diperbarui      |
 
 ## Struktur JSON
 
@@ -20,7 +20,7 @@
 [
   {
     "nama": "string",
-    "deskripsi": "string", 
+    "deskripsi": "string",
     "gambar": "string (URL)"
   }
 ]
@@ -49,3 +49,18 @@
 - Gambar disimpan sebagai URL ke Google Cloud Storage
 - Validasi menggunakan Joi schema untuk memastikan struktur JSON yang benar
 - Entitas dapat memiliki multiple items dalam setiap kategori
+
+## SQL Query
+
+```sql
+-- 4. Deskripsi Wisata Table
+CREATE TABLE public.deskripsi_wisata (
+  kd_desa TEXT NOT NULL PRIMARY KEY REFERENCES public.desa_wisata(kd_desa),
+  atraksi JSONB,
+  penginapan JSONB,
+  paket_wisata JSONB,
+  suvenir JSONB,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+```

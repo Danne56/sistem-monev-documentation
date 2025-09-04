@@ -2,14 +2,12 @@
 
 ## Kolom
 
-| Nama Kolom | Tipe Data | Constraint | Deskripsi |
-|------------|-----------|------------|-----------|
-| id | SERIAL | PRIMARY KEY | ID unik reset request |
-| email | VARCHAR(100) | UNIQUE NOT NULL | Email pengguna (foreign key) |
-| user_id | INTEGER | NOT NULL | ID pengguna (foreign key) |
-| reset_code | VARCHAR(6) | NOT NULL | Kode reset 6 digit |
-| expires_at | TIMESTAMP WITH TIME ZONE | NOT NULL | Waktu kadaluarsa (5 menit) |
-| created_at | TIMESTAMP WITH TIME ZONE | DEFAULT CURRENT_TIMESTAMP | Waktu pembuatan |
+| Nama Kolom | Tipe Data                   | Constraint                  | Deskripsi                    |
+| ---------- | --------------------------- | --------------------------- | ---------------------------- |
+| email      | VARCHAR                     | PRIMARY KEY                 | Email pengguna (foreign key) |
+| user_id    | TEXT                        | REFERENCES public.users(id) | ID pengguna (foreign key)    |
+| reset_code | VARCHAR                     | NOT NULL                    | Kode reset 6 digit           |
+| expires_at | TIMESTAMP WITHOUT TIME ZONE | NOT NULL                    | Waktu kadaluarsa (5 menit)   |
 
 ## Relasi
 
@@ -35,3 +33,15 @@
 - Email dikirim menggunakan Nodemailer dengan SMTP Gmail
 - Menggunakan ON CONFLICT untuk update kode yang sudah ada
 - Validasi kadaluarsa dilakukan dengan `expires_at > NOW()`
+
+## SQL Query
+
+```sql
+-- 5. Password Resets Table
+CREATE TABLE public.password_resets (
+  email VARCHAR NOT NULL PRIMARY KEY,
+  user_id TEXT REFERENCES public.users(id),
+  reset_code VARCHAR NOT NULL,
+  expires_at TIMESTAMP WITHOUT TIME ZONE NOT NULL
+);
+```
